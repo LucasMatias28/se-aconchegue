@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de PDV</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="logo">Se Aconchegue</div>
+        <h1>Bem-vindo à loja de redes de dormir</h1>
+        <button id="reportBtn" onclick="openSalesSummary()">Relatório</button>
+    </header>
+    <main>
+        <div class="products">
+            <h2>Produtos</h2>
+            <input type="text" id="searchInput" placeholder="Buscar produtos">
+            <div id="productList" class="product-list"></div>
+        </div>
+        
+        <div class="cart">
+            <h2>Carrinho</h2>
+            
+            <div id="cartItems" class="cart-items"></div>
+            
+            <div class="cart-summary">
+                <div id="totalAmount">Total: R$ 0.00</div>
+                <div class="footer-container">
+                    <input type="number" id="discount" placeholder="Desconto" oninput="updateTotal()">
+                    <select id="paymentMethod">
+                        <option value="dinheiro">Dinheiro</option>
+                        <option value="cartão">Cartão</option>
+                        <option value="pix">PIX</option>
+                    </select>
+                    <button id="finalizePurchaseBtn" onclick="finalizeSale()">Finalizar Compra</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="salesSummaryPopup" class="sales-summary-popup">
+            <div class="popup-content">
+                <span class="close-btn" onclick="closeSalesSummary()">&times;</span>
+                <div id="salesSummary" class="sales-summary">
+                    <!-- Resumo de Vendas Diárias será exibido aqui -->
+                </div>
+                <button onclick="exportToExcel()">Exportar para Excel</button>
+            </div>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
