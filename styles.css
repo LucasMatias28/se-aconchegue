@@ -11,7 +11,7 @@ body {
     /* padding: 10px 0; Espaçamento adicional para a logo e texto */
     background: url('22.jpg') no-repeat center center;
     background-size: cover;
-    background-color: #000000;
+    /* background-color: #000000; */
     height: 500px; /* Altura do cabeçalho, ajuste conforme necessário */
     width: 100%;
 }
@@ -55,8 +55,8 @@ header .logo h1 {
 
 main {
     display: flex;
-    padding: 10px;
-    gap: 20px;
+    padding: 5px;
+    gap: 5px;
     box-sizing: border-box;
     height: calc(100vh - 80px); /* Altura total menos o header */
 }
@@ -65,16 +65,18 @@ main {
     background-color: #00000039; /* Fundo branco */
     border-radius: 8px;
     box-shadow: 0 4px 6px rgb(0, 0, 0);
-    padding: 20px;
+    padding: 10px;
     box-sizing: border-box;
     flex: 1;
     display: flex;
     flex-direction: column;
+    height: 450px;
     border: 2px solid #000000;
 }
 
 .products {
     overflow-y: auto; /* Permite rolar a lista de produtos */
+    
 }
 
 .cart {
@@ -84,14 +86,17 @@ main {
 }
 
 .cart-items {
-    overflow-y: auto; /* Permite rolar a lista de itens no carrinho */
+    overflow-y: auto; /* Permite rolar a lista de itens no carrinho verticalmente */
+    overflow-x: hidden; /* Oculta a barra de rolagem horizontal */
     flex: 1;
+    max-height: 500px; /* Define uma altura máxima para o contêiner para garantir a rolagem */
 }
+
 
 .products h2, .cart h2 {
     color: #ffffff; /* Laranja da Amazon */
     border-bottom: 2px solid #ffffff;
-    padding-bottom: 10px;
+    padding-bottom: 5px;
     margin-bottom: 20px;
     font-size: 1.5em;
 }
@@ -107,8 +112,9 @@ input[type="text"] {
 
 .product-list {
     display: flex;
-    flex-direction: column;
+    flex-direction:column;
     gap: 20px;
+    
 }
 
 .product-item {
@@ -121,7 +127,7 @@ input[type="text"] {
     transition: transform 0.3s, box-shadow 0.3s;
     position: relative;
     background-size: cover;
-    /* overflow: hidden; Garante que a imagem de fundo não ultrapasse os limites */
+      overflow: hidden; 
 }
 
 .product-item:hover {
@@ -227,7 +233,8 @@ input[type="text"] {
     font-size: 1.5em;
     font-weight: bold;
     margin-bottom: 5px;
-    text-align: right;
+    display: flex;
+    justify-content: flex-end;
     color: #000000; /* Azul escuro da Amazon */
 }
 
@@ -240,6 +247,11 @@ input[type="text"] {
     margin-bottom: 10px;
     margin-inline: 5px; /* Ajuste o valor conforme necessário */
 }
+.footer-container {
+    display: flex;
+    justify-content: flex-end; /* Alinha o conteúdo (incluindo o botão) à direita */
+    align-items: center; /* Opcional: alinha verticalmente os itens no centro */
+}
 
 #finalizePurchaseBtn {
     background-color: #000000a0; /* Laranja da Amazon */
@@ -247,11 +259,12 @@ input[type="text"] {
     border: none;
     padding: 10px 20px;
     border-radius: 6px;
+    text-align: right;
     cursor: pointer;
     font-size: 1.2em;
-    text-align: center;
-    transition: background-color 0.3s;
-    margin-left: auto;
+   
+ transition: background-color 0.3s;
+    /* margin-left: auto; */
 }
 
 #finalizePurchaseBtn:hover {
@@ -278,41 +291,40 @@ select {
 }
 
 /* Estilização do popup */
-.sales-summary-popup {
-    display: none; /* Oculta o popup por padrão */
+.payment-popup, .sales-summary-popup {
+    display: none;
     position: fixed;
-    top: 0;
+    z-index: 1;
     left: 0;
+    top: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Garante que o popup fique sobre outros elementos */
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .popup-content {
-    background: rgba(255, 255, 255, 0.894);
+    background-color: #fefefed5;
+    margin: 15% auto;
     padding: 20px;
-    border-radius: 8px;
+    border: 1px solid #000000;
     width: 80%;
-    max-width: 600px;
-    position: relative;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    text-align: center;
 }
 
 .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 24px;
-    cursor: pointer;
-    color: #000000a0; /* Azul escuro da Amazon */
-    transition: color 0.3s;
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
 }
 
-.close-btn:hover {
-    color: #000000a0; /* Laranja da Amazon */
+.close-btn:hover,
+.close-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .sales-summary h3 {
@@ -371,4 +383,7 @@ select {
     transition: background-color 0.3s;
     margin-left: auto;
 }
+
+
+
 ;

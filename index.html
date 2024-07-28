@@ -17,40 +17,58 @@
     <main>
         <div class="products">
             <h2>Produtos</h2>
-           <!-- : <input type="text" id="searchInput" placeholder="Buscar produtos"> -->
             <div id="productList" class="product-list"></div>
         </div>
         
         <div class="cart">
             <h2>Carrinho</h2>
-            
             <div id="cartItems" class="cart-items"></div>
-            
             <div class="cart-summary">
                 <div id="totalAmount">Total: R$ 0.00</div>
                 <div class="footer-container">
                     <input type="number" id="discount" placeholder="Desconto" oninput="updateTotal()">
-                    <select id="paymentMethod">
-                        <option value="dinheiro">Dinheiro</option>
-                        <option value="cartão">Cartão</option>
-                        <option value="pix">PIX</option>
-                    </select>
-                    <button id="finalizePurchaseBtn" onclick="finalizeSale()">Finalizar Compra</button>
+                    <button id="finalizePurchaseBtn" onclick="openPaymentPopup()">Finalizar Compra</button>
                 </div>
-            </div>
-        </div>
-
-        <div id="salesSummaryPopup" class="sales-summary-popup">
-            <div class="popup-content">
-                <span class="close-btn" onclick="closeSalesSummary()">&times;</span>
-                <div id="salesSummary" class="sales-summary">
-                    <!-- Resumo de Vendas Diárias será exibido aqui -->
-                </div>
-                <button onclick="cancelLastSale()">Cancelar Última Venda</button>
-                <button onclick="exportToExcel()">Exportar para Excel</button>
             </div>
         </div>
     </main>
+
+    <div id="paymentPopup" class="payment-popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closePaymentPopup()">&times;</span>
+            <h2>Escolha o Método de Pagamento</h2>
+            <select id="paymentMethod" onchange="toggleInstallments()">
+                <option value="dinheiro">Dinheiro</option>
+                <option value="cartão">Cartão</option>
+                <option value="pix">PIX</option>
+            </select>
+            <select id="installments" style="display:none;" onchange="updateTotal()">
+                <option value="1">À Vista</option>
+                <option value="2">2x</option>
+                <option value="3">3x</option>
+                <option value="4">4x</option>
+                <option value="5">5x</option>
+                <option value="6">6x</option>
+                <option value="7">7x</option>
+                <option value="8">8x</option>
+                <option value="9">9x</option>
+                <option value="10">10x</option>
+                <option value="11">11x</option>
+                <option value="12">12x</option>
+            </select>
+            <button onclick="finalizeSale()">Confirmar Pagamento</button>
+        </div>
+    </div>
+
+    <div id="salesSummaryPopup" class="sales-summary-popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeSalesSummary()">&times;</span>
+            <div id="salesSummary" class="sales-summary"></div>
+            <button onclick="cancelLastSale()">Cancelar Última Venda</button>
+            <button onclick="exportToExcel()">Exportar para Excel</button>
+        </div>
+    </div>
+    
     <script src="script.js"></script>
 </body>
 </html>

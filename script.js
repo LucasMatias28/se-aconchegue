@@ -1,9 +1,9 @@
 // Variáveis Globais
 const products = [
-    { id: '1', name: 'Rede Bucho de Boi', price: 180.00, image: 'buchodeboi.png' },
     { id: '2', name: 'Rede Indiana', price: 70.00, image: 'redeindiana.jpg' },
     { id: '3', name: 'Rede Tijubana', price: 90.00, image: 'Rede Tijubana.jpg' },
     { id: '4', name: 'Rede Nylon', price: 70.00, image: 'Rede nyln.png' },
+    { id: '1', name: 'Rede Bucho de Boi', price: 180.00, image: 'buchodeboi.png' },
     { id: '5', name: 'Manta UGA', price: 40.00, image: 'Manta UGA.jpg' },
     { id: '6', name: 'Rede Cinza', price: 40.00, image: 'Rede cinza.jpg' },
     { id: '7', name: 'Rede Sol a Sol', price: 120.00, image: 'Rede sol a sol.jpg' },
@@ -86,108 +86,165 @@ function updateTotal() {
     const discount = parseFloat(document.getElementById('discount').value) || 0;
     const total = cart.reduce((sum, product) => sum + (product.price * product.quantity), 0);
     const totalAfterDiscount = total - discount;
+
     document.getElementById('totalAmount').textContent = `Total: R$ ${totalAfterDiscount.toFixed(2)}`;
+}
+
+
+// Função para alternar a exibição do seletor de parcelas
+function toggleInstallments() {
+    const paymentMethod = document.getElementById('paymentMethod').value;
+    const installments = document.getElementById('installments');
+
+    if (paymentMethod === 'cartão') {
+        installments.style.display = 'inline-block';
+    } else {
+        installments.style.display = 'none';
+        installments.value = '1';
+        updateTotal();
+    }
+}
+
+// Função para abrir o popup de pagamento
+function openPaymentPopup() {
+    document.getElementById('paymentPopup').style.display = 'block';
+}
+
+// Função para fechar o popup de pagamento
+function closePaymentPopup() {
+    document.getElementById('paymentPopup').style.display = 'none';
 }
 
 // Função para finalizar a venda
 function finalizeSale() {
+    const discount = parseFloat(document.getElementById('discount').value) || 0;
     const total = cart.reduce((sum, product) => sum + (product.price * product.quantity), 0);
-    salesSummary.totalSales += total;
+    const totalAfterDiscount = total - discount;
+    const paymentMethod = document.getElementById('paymentMethod').value;
+    const installments = parseInt(document.getElementById('installments').value) || 1;
+    const totalPerInstallment = totalAfterDiscount / installments;
+
+    salesSummary.totalSales += totalAfterDiscount;
 
     cart.forEach(product => {
         if (!salesSummary.productsSold[product.id]) {
             salesSummary.productsSold[product.id] = {
                 name: product.name,
                 quantity: 0,
-                total: 0
+                totalSales: 0
             };
         }
+
         salesSummary.productsSold[product.id].quantity += product.quantity;
-        salesSummary.productsSold[product.id].total += product.price * product.quantity;
+        salesSummary.productsSold[product.id].totalSales += product.price * product.quantity;
     });
 
     salesSummary.dailySales.push({
-        date: new Date().toISOString().split('T')[0],
-        total: total
+        timestamp: new Date().toLocaleString(),
+        total: totalAfterDiscount,
+        paymentMethod: paymentMethod,
+        installments: installments,
+        totalPerInstallment: totalPerInstallment,
+        cart: [...cart]
     });
 
     cart = [];
     renderCart();
     updateTotal();
-    renderDailySalesSummary();
+    alert('Venda finalizada com sucesso!');
+    closePaymentPopup(); // Fechar o popup após finalizar a venda
 }
 
-// Função para cancelar a última venda
-function cancelLastSale() {
-    if (salesSummary.dailySales.length === 0) return;
+// Função para alternar a exibição do seletor de parcelas
+function toggleInstallments() {
+    const paymentMethod = document.getElementById('paymentMethod').value;
+    const installments = document.getElementById('installments');
 
-    const lastSale = salesSummary.dailySales.pop();
-    salesSummary.totalSales -= lastSale.total;
-
-    renderDailySalesSummary();
+    if (paymentMethod === 'cartão') {
+        installments.style.display = 'inline-block';
+    } else {
+        installments.style.display = 'none';
+        installments.value = '1';
+        updateTotal();
+    }
 }
 
-// Função para abrir o resumo de vendas
+// Função para abrir o resumo das vendas
 function openSalesSummary() {
-    renderDailySalesSummary();
-    document.getElementById('salesSummaryPopup').style.display = 'flex';
+    const salesSummaryDiv = document.getElementById('salesSummary');
+    salesSummaryDiv.innerHTML = `
+        <h2>Resumo das Vendas</h2>
+        <p>Total de Vendas: R$ ${salesSummary.totalSales.toFixed(2)}</p>
+        <h3>Produtos Vendidos:</h3>
+        <ul>
+            ${Object.values(salesSummary.productsSold).map(product => `
+                <li>${product.name}: ${product.quantity} vendidos (Total: R$ ${product.totalSales.toFixed(2)})</li>
+            `).join('')}
+        </ul>
+        <h3>Vendas Diárias:</h3>
+        <ul>
+            ${salesSummary.dailySales.map(sale => `
+                <li>${sale.timestamp} - Total: R$ ${sale.total.toFixed(2)}, Parcelas: ${sale.installments}x de R$ ${sale.totalPerInstallment.toFixed(2)} (${sale.paymentMethod})</li>
+            `).join('')}
+        </ul>
+    `;
+
+    document.getElementById('salesSummaryPopup').style.display = 'block';
 }
 
-// Função para fechar o resumo de vendas
+// Função para fechar o resumo das vendas
 function closeSalesSummary() {
     document.getElementById('salesSummaryPopup').style.display = 'none';
 }
 
-// Função para renderizar o resumo de vendas diárias
-function renderDailySalesSummary() {
-    const salesSummaryDiv = document.getElementById('salesSummary');
-    salesSummaryDiv.innerHTML = `
-        <h3>Resumo de Vendas Diárias</h3>
-        <p>Total Arrecadado: R$ ${salesSummary.totalSales.toFixed(2)}</p>
-        <h4>Produtos Vendidos</h4>
-        <ul>
-            ${Object.values(salesSummary.productsSold).map(product => `
-                <li>${product.name}: ${product.quantity} unidades, Total: R$ ${product.total.toFixed(2)}</li>
-            `).join('')}
-        </ul>
-        <h4>Vendas do Dia</h4>
-        <ul>
-            ${salesSummary.dailySales.map(sale => `
-                <li>${sale.date}: R$ ${sale.total.toFixed(2)}</li>
-            `).join('')}
-        </ul>
-    `;
-}
+// Função para cancelar a última venda
+function cancelLastSale() {
+    const lastSale = salesSummary.dailySales.pop();
 
-// Função para exportar para Excel
-function exportToExcel() {
-    console.log("Exportando para Excel...");
-    try {
-        const wsData = [
-            ['Data', 'Total']
-        ];
-        
-        salesSummary.dailySales.forEach(sale => {
-            wsData.push([sale.date, sale.total.toFixed(2)]);
+    if (lastSale) {
+        salesSummary.totalSales -= lastSale.total;
+
+        lastSale.cart.forEach(product => {
+            if (salesSummary.productsSold[product.id]) {
+                salesSummary.productsSold[product.id].quantity -= product.quantity;
+                salesSummary.productsSold[product.id].totalSales -= product.price * product.quantity;
+
+                if (salesSummary.productsSold[product.id].quantity <= 0) {
+                    delete salesSummary.productsSold[product.id];
+                }
+            }
         });
 
-        wsData.push([]);
-        wsData.push(['Produto', 'Quantidade Vendida', 'Total Arrecadado']);
-        
-        Object.values(salesSummary.productsSold).forEach(product => {
-            wsData.push([product.name, product.quantity, product.total.toFixed(2)]);
-        });
-
-        const ws = XLSX.utils.aoa_to_sheet(wsData);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Resumo de Vendas Diárias');
-
-        XLSX.writeFile(wb, 'relatorio_vendas_diarias.xlsx');
-        console.log("Arquivo exportado com sucesso!");
-    } catch (error) {
-        console.error("Erro ao exportar para Excel:", error);
+        openSalesSummary();
+        alert('Última venda cancelada com sucesso!');
+    } else {
+        alert('Nenhuma venda para cancelar!');
     }
 }
 
-// Carregar produtos quando o documento estiver pronto
+// Função para exportar o resumo das vendas para o Excel
+function exportToExcel() {
+    const ws_data = [
+        ['Resumo das Vendas'],
+        ['Total de Vendas', salesSummary.totalSales.toFixed(2)],
+        ['Produtos Vendidos']
+    ];
+
+    Object.values(salesSummary.productsSold).forEach(product => {
+        ws_data.push([product.name, product.quantity, product.totalSales.toFixed(2)]);
+    });
+
+    ws_data.push(['Vendas Diárias']);
+
+    salesSummary.dailySales.forEach(sale => {
+        ws_data.push([sale.timestamp, sale.total.toFixed(2), `${sale.installments}x de R$ ${sale.totalPerInstallment.toFixed(2)}`, sale.paymentMethod]);
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Resumo das Vendas');
+    XLSX.writeFile(wb, 'resumo_das_vendas.xlsx');
+}
+
+// Carregar produtos ao iniciar
 document.addEventListener('DOMContentLoaded', loadProducts);
