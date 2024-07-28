@@ -1,10 +1,16 @@
-// script.js
-
 // Variáveis Globais
 const products = [
-    { id: '1', name: 'Rede de Dormir Colorida', price: 120.00, image: 'rede1.jpg' },
-    { id: '2', name: 'Rede de Dormir Listrada', price: 150.00, image: 'rede2.jpg' },
-    { id: '3', name: 'Rede de Dormir Simples', price: 100.00, image: 'rede3.jpg' }
+    { id: '1', name: 'Rede Bucho de Boi', price: 180.00, image: 'buchodeboi.png' },
+    { id: '2', name: 'Rede Indiana', price: 70.00, image: 'redeindiana.jpg' },
+    { id: '3', name: 'Rede Tijubana', price: 90.00, image: 'Rede Tijubana.jpg' },
+    { id: '4', name: 'Rede Nylon', price: 70.00, image: 'Rede nyln.png' },
+    { id: '5', name: 'Manta UGA', price: 40.00, image: 'Manta UGA.jpg' },
+    { id: '6', name: 'Rede Cinza', price: 40.00, image: 'Rede cinza.jpg' },
+    { id: '7', name: 'Rede Sol a Sol', price: 120.00, image: 'Rede sol a sol.jpg' },
+    { id: '8', name: 'Rede Cadeira', price: 110.00, image: 'redecadeira.jpg' },
+    { id: '9', name: 'Tapete Médio', price: 100.00, image: 'tapetemedio.jpg' },
+    { id: '10', name: 'Tapete Grande', price: 180.00, image: 'tapeteG.jpg' },
+    { id: '11', name: 'Tapete Pequeno', price: 80.00, image: 'tepeteP.jpg' },
 ];
 let cart = [];
 const salesSummary = {
@@ -61,7 +67,16 @@ function renderCart() {
 
 // Função para remover produtos do carrinho
 function removeFromCart(id) {
-    cart = cart.filter(item => item.id !== id);
+    const cartItem = cart.find(item => item.id === id);
+
+    if (cartItem) {
+        if (cartItem.quantity > 1) {
+            cartItem.quantity -= 1;
+        } else {
+            cart = cart.filter(item => item.id !== id);
+        }
+    }
+
     renderCart();
     updateTotal();
 }
@@ -99,6 +114,16 @@ function finalizeSale() {
     cart = [];
     renderCart();
     updateTotal();
+    renderDailySalesSummary();
+}
+
+// Função para cancelar a última venda
+function cancelLastSale() {
+    if (salesSummary.dailySales.length === 0) return;
+
+    const lastSale = salesSummary.dailySales.pop();
+    salesSummary.totalSales -= lastSale.total;
+
     renderDailySalesSummary();
 }
 

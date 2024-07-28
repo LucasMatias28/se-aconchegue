@@ -9,14 +9,15 @@
 </head>
 <body>
     <header>
-        <div class="logo">Se Aconchegue</div>
-        <h1>Bem-vindo à loja de redes de dormir</h1>
-        <button id="reportBtn" onclick="openSalesSummary()">Relatório</button>
+        <img src="teste33.png" class="logo">
+        <button id="reportBtn" onclick="openSalesSummary()">
+            <img src="im.png" alt="Relatório">
+        </button>
     </header>
     <main>
         <div class="products">
             <h2>Produtos</h2>
-            <input type="text" id="searchInput" placeholder="Buscar produtos">
+           <!-- : <input type="text" id="searchInput" placeholder="Buscar produtos"> -->
             <div id="productList" class="product-list"></div>
         </div>
         
@@ -45,6 +46,7 @@
                 <div id="salesSummary" class="sales-summary">
                     <!-- Resumo de Vendas Diárias será exibido aqui -->
                 </div>
+                <button onclick="cancelLastSale()">Cancelar Última Venda</button>
                 <button onclick="exportToExcel()">Exportar para Excel</button>
             </div>
         </div>
